@@ -20,6 +20,8 @@ class Description extends StatefulWidget {
 
 class _DescriptionState extends State<Description> {
   List<Product> products = [];
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      new GlobalKey<RefreshIndicatorState>();
 
   Future<dynamic> loadJson(url) async {
     var response = await http.get(url);
@@ -63,11 +65,15 @@ class _DescriptionState extends State<Description> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(),
-      body: ListView.builder(
-        itemCount: products.length,
-        itemBuilder: (context, index) {
-          return buildListTile(index);
-        },
+      body: RefreshIndicator(
+        key: _refreshIndicatorKey,
+        onRefresh: loadData,
+        child: ListView.builder(
+          itemCount: products.length,
+          itemBuilder: (context, index) {
+            return buildListTile(index);
+          },
+        ),
       ),
     );
   }
