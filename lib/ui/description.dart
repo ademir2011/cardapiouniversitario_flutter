@@ -53,9 +53,6 @@ class _DescriptionState extends State<Description> {
                 categoria: data['feed']['entry'][contador++]['gs\$cell']
                     ['\$t']),
           );
-          // print(data['feed']['entry'][contador++]['gs\$cell']['\$t']);
-          // print(data['feed']['entry'][contador++]['gs\$cell']['\$t']);
-          // print(data['feed']['entry'][contador++]['gs\$cell']['\$t']);
         }
       });
     });
@@ -68,7 +65,10 @@ class _DescriptionState extends State<Description> {
       body: RefreshIndicator(
         key: _refreshIndicatorKey,
         onRefresh: loadData,
-        child: ListView.builder(
+        child: ListView.separated(
+          separatorBuilder: (context, index) => Divider(
+            color: Colors.black,
+          ),
           itemCount: products.length,
           itemBuilder: (context, index) {
             return buildListTile(index);
@@ -79,7 +79,10 @@ class _DescriptionState extends State<Description> {
   }
 
   Widget buildAppBar() {
-    return AppBar();
+    return AppBar(
+      actions: <Widget>[],
+      title: Text("Cardapio Universitario"),
+    );
   }
 
   Widget buildListTile(index) {

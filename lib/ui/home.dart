@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:cardapiouniversitario/model/product.dart';
 import 'package:cardapiouniversitario/model/restaurant.dart';
 import 'package:cardapiouniversitario/ui/description.dart';
 import 'package:flutter/material.dart';
@@ -51,6 +50,11 @@ class _HomeState extends State<Home> {
     });
   }
 
+  Future<dynamic> loadJson(url) async {
+    var response = await http.get(url);
+    return response.statusCode == 200 ? jsonDecode(response.body) : null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,29 +70,48 @@ class _HomeState extends State<Home> {
   Widget buildAppBar() {
     return AppBar(
       actions: <Widget>[],
+      title: Text("Cardapio Universitario"),
     );
   }
 
-  Future<dynamic> loadJson(url) async {
-    var response = await http.get(url);
-    return response.statusCode == 200 ? jsonDecode(response.body) : null;
-  }
-
   Widget buildBody(context) {
-    return ListView.builder(
+    return ListView.separated(
+      separatorBuilder: (context, index) => Divider(
+        color: Colors.black,
+      ),
       itemCount: restaurants.length,
       itemBuilder: (context, index) {
-        return ListTile(
-          leading: Icon(Icons.account_balance),
-          title: Text(restaurants[index].nome),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => Description(restaurants[index], index),
-              ),
-            );
-          },
+        return buildListTile(index);
+      },
+    );
+  }
+
+  Widget buildListTile(index) {
+    return ListTile(
+      leading: Icon(Icons.account_balance),
+      title: Text(restaurants[index].nome),
+      subtitle: Row(
+        children: <Widget>[
+          Icon(
+            Icons.star,
+            size: 15.0,
+            color: Colors.yellow,
+          ),
+          SizedBox(
+            width: 8,
+          ),
+          Text(
+            "4.2",
+            style: TextStyle(fontSize: 12.0),
+          ),
+        ],
+      ),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => Description(restaurants[index], index),
+          ),
         );
       },
     );
